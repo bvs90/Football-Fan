@@ -54,8 +54,21 @@ table {
 #setup {
   width: 33%;
   margin: 15% auto;
-  border: 1px solid black;
   text-align: center;
+}
+#team-menu {
+  display: none;
+}
+.team-menu-left,
+.team-menu-right {
+  width: 48%;
+  border: 1px solid red;
+}
+.team-menu-left {
+  float: left;
+}
+.team-menu-right {
+  float: right;
 }
 
 
