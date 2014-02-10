@@ -70,11 +70,38 @@ table {
 .team-menu-right {
   float: right;
 }
-
-
 .stats-container {
   display: none;
 }
+
+/* Stats Page */
+body {
+  padding: 0.5%;
+}
+header {
+  height: 4vh;
+  width: 100%;
+  margin: 1vh 0;
+  border: 1px solid black;
+  box-sizing: border-box;
+}      
+.bigBox {
+  height: 91.5vh;
+  width: 33%;
+  border: 1px solid black;
+  box-sizing: border-box;
+  float: left;
+}
+.smallBox {
+  height: 45.30vh;
+  width: 33%;
+  border: 1px solid black;
+  box-sizing: border-box;
+  float: left;
+  margin-left: 0.5%;
+  margin-bottom: 1vh     
+}
+
 
 
 
