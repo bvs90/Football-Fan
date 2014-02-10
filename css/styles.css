@@ -49,6 +49,13 @@ table {
   border-spacing: 0;
 }
 
+/* ClearFix */
+.group:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 
 /* Main Styles */
 #setup {
@@ -84,7 +91,17 @@ header {
   margin: 1vh 0;
   border: 1px solid black;
   box-sizing: border-box;
-}      
+  /* needs clearfix at some point */
+}
+
+header h2 {
+  float: right;
+}
+/*#team-menu-flyout {
+  width: 33%;
+}*/
+
+
 .bigBox {
   height: 91.5vh;
   width: 33%;
@@ -102,7 +119,16 @@ header {
   margin-bottom: 1vh     
 }
 
-
-
-
-
+/* League Table */
+#league-table th {
+  padding: 3px;
+}
+#league-table td {
+  padding: 7px 0;
+}
+.team-name {
+  text-align: left;
+}
+td {
+  text-align: center;
+}
