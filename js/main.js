@@ -1,9 +1,14 @@
 // initialise stats
 
 var initialise = function(teamName){
+  var today = new Date();
+  today = today.toISOString('YYYY-MM-DD');
+  today = today.slice(0,10);
+  
   getTopScorers(teamName);
   //checkJSON()
   getForm(teamName);
+  getFixtures(teamName, today);
 }
 
 //utility to chekc team names are correct. 
@@ -81,6 +86,30 @@ var getForm = function(teamName){
 
 
 // get fixtures 
+var getFixtures = function(teamName, today){
+  $.ajax({
+    url: "http://api.statsfc.com/fixtures.json?key=SBCwkOLa9b8lmePuTjFIoFmFkdo9cvtAPrhxlA6k&competition=premier-league&team=" + teamName + "&from=" + today + "&to=2014-06-01&timezone=America/Los_Angeles&limit=10",    
+    dataType: "jsonp",
+    success: function(data){
+      $list = $('<ul></ul>');
+      for(var i = 0; i < data.length; i++){
+        if(data[i].homepath === teamName) {
+          var opponent = data[i].away;
+          var venue = 'at Home';
+        }else {
+          var opponent = data[i].home;
+          var venue = 'Away';
+        }
+        $fixtures = $('<li>' + data[i].date + " V " + opponent + " " + venue + '</li>');
+        $list.append([$fixtures]);
+        $('#fixtures').append($list)
+      } 
+    },
+    error: function(err){
+      throw err;
+    } 
+  })
+};
 
 
 // render fixtures 
@@ -102,6 +131,11 @@ $(function() {
     $('#setup').remove();
     $('.stats-container').fadeIn(1);
     initialise(team);
+
+  // $('#switch-team').on('mouseenter', function() {
+
+  // })  
+
   })  
 })
 
