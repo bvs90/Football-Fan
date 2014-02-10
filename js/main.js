@@ -9,6 +9,7 @@ var initialise = function(teamName){
   //checkJSON()
   getForm(teamName);
   getFixtures(teamName, today);
+  getResults(teamName, today);
 }
 
 //utility to chekc team names are correct. 
@@ -56,7 +57,31 @@ var getTopScorers = function(teamName){
 // render league table 
 
 
-// get results 
+// get results
+var getResults = function(teamName, today){
+  $.ajax({
+    url: "http://api.statsfc.com/results.json?key=SBCwkOLa9b8lmePuTjFIoFmFkdo9cvtAPrhxlA6k&competition=premier-league&team=" + teamName + "&year=2013/2014&from=2013-08-01&to=" + today + "&timezone=America/Los_Angeles&limit=10",    
+    dataType: "jsonp",
+    success: function(data){
+      $list = $('<ul></ul>');
+      for(var i = 0; i < data.length; i++){
+        if(data[i].homepath === teamName) {
+          var opponent = data[i].away;
+          var venue = 'Home';
+        }else {
+          var opponent = data[i].home;
+          var venue = 'Away';
+        }
+        $results = $('<li>' + data[i].date + " " + data[i].fulltime + " V " + opponent + " " + venue + '</li>');
+        $list.append([$results]);
+        $('#results').append($list)
+      } 
+    },
+    error: function(err){
+      throw err;
+    } 
+  })
+}; 
 
 // render results 
 
