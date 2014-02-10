@@ -51,3 +51,18 @@ table {
 
 
 /* Main Styles */
+#setup {
+  width: 33%;
+  margin: 15% auto;
+  border: 1px solid black;
+  text-align: center;
+}
+
+
+.stats-container {
+  display: none;
+}
+
+
+
+
