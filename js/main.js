@@ -10,6 +10,7 @@ var initialise = function(teamName){
   getForm(teamName);
   getFixtures(teamName, today);
   getResults(teamName, today);
+  getTable();
 }
 
 //utility to chekc team names are correct. 
@@ -51,7 +52,38 @@ var getTopScorers = function(teamName){
 // render top scores 
 
 
-// get league table 
+// get league table
+var getTable = function(teamName, today){
+  $.ajax({
+    url: "http://api.statsfc.com/table.json?key=SBCwkOLa9b8lmePuTjFIoFmFkdo9cvtAPrhxlA6k&competition=premier-league&year=2013/2014",    
+    dataType: "jsonp",
+    success: function(data){
+      var $table = $('<table></table>');
+      var $headers = $('<tr><th>Team</th><th>Played</th><th>Won</th><th>Drawn</th><th>Lost</th><th>GF</th><th>GA</th><th>Diff</th><th>Points</th></tr>');
+      $table.append($headers);
+      $('#league-table').append($table);
+      
+      for(var i = 0; i < data.length; i++){
+        var $row = $('<tr></tr>');
+        var $team = $('<td class="team-name">' + data[i].team +'</td>');
+        var $played = $('<td>' + data[i].played +'</td>');
+        var $won = $('<td>' + data[i].won +'</td>');
+        var $drawn = $('<td>' + data[i].drawn +'</td>');
+        var $lost = $('<td>' + data[i].lost +'</td>');
+        var $goalsFor = $('<td>' + data[i]['for'] +'</td>');
+        var $goalsAgainst = $('<td>' + data[i].against +'</td>');
+        var $goalDiff = $('<td>' + data[i].difference +'</td>');
+        var $points = $('<td>' + data[i].points +'</td>');
+        $row.append([$team, $played, $won, $drawn, $lost, $goalsFor, $goalsAgainst, $goalDiff, $points]);
+        $table.append($row);
+      }
+       
+    },
+    error: function(err){
+      throw err;
+    } 
+  })
+};  
 
 
 // render league table 
@@ -63,7 +95,7 @@ var getResults = function(teamName, today){
     url: "http://api.statsfc.com/results.json?key=SBCwkOLa9b8lmePuTjFIoFmFkdo9cvtAPrhxlA6k&competition=premier-league&team=" + teamName + "&year=2013/2014&from=2013-08-01&to=" + today + "&timezone=America/Los_Angeles&limit=10",    
     dataType: "jsonp",
     success: function(data){
-      $list = $('<ul></ul>');
+      var $list = $('<ul></ul>');
       for(var i = 0; i < data.length; i++){
         if(data[i].homepath === teamName) {
           var opponent = data[i].away;
@@ -72,7 +104,7 @@ var getResults = function(teamName, today){
           var opponent = data[i].home;
           var venue = 'Away';
         }
-        $results = $('<li>' + data[i].date + " " + data[i].fulltime + " V " + opponent + " " + venue + '</li>');
+        var $results = $('<li>' + data[i].date + " " + data[i].fulltime + " V " + opponent + " " + venue + '</li>');
         $list.append([$results]);
         $('#results').append($list)
       } 
