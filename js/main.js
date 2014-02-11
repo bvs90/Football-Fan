@@ -40,20 +40,20 @@ var initialise = function(teamName){
 // get top scorers 
 var getTopScorers = function(teamName){
   if(('#top-scorers').length > 1) {
-    $('#top-scorers').find('ul').remove();
+    $('#top-scorers').find('div').remove();
   };
 
   $.ajax({
     url: "http://api.statsfc.com/top-scorers.json?key=SBCwkOLa9b8lmePuTjFIoFmFkdo9cvtAPrhxlA6k&competition=premier-league&team=" + teamName + "&year=2013/2014",    
     dataType: "jsonp",
     success: function(data){
-      // renderScorers(data);
-      $list = $('<ul></ul>');
+      var scoreObj = [];
       for(var i = 0; i < 10; i++){
-        $player = $('<li>' + data[i].playershort + " " + data[i].goals + '</li>');
-        $list.append([$player]);
-        $('#top-scorers').append($list);
+        if(data[i]){
+          scoreObj.push(data[i]);
+        }
       }
+      renderScorers(scoreObj);
     },
     error: function(err){
       throw err;
@@ -62,7 +62,30 @@ var getTopScorers = function(teamName){
 };
 
 // render top scores 
+var renderScorers = function(data) {
+  var goalsData = data;
+  console.log(goalsData);
 
+  var x = d3.scale.linear()
+    .domain([0, d3.max(data)])
+    .range([0, ])
+
+  var width = '50%';
+  var barHeight = '5%';
+
+  var chart = d3.select('#top-scorers').selectAll('div')
+    .data(goalsData)
+    .enter().append('div').classed('data-container', true)
+
+  chart.append('span')
+    .text(function(d) { return d.playershort; });
+  chart.append('div')
+    .style('width', function(d) { return d.goals * 10 + 'px'})
+    .classed('data-rep', true)
+    .append('span').classed('goals', true)
+    .text(function(d) { return d.goals; });
+
+}
 
 // get league table
 var getTable = function(teamName, today){
@@ -173,9 +196,9 @@ var renderForm = function(data) {
     { 'label': 'Drawn', 'value': 0}
   ];
   
-  var width = "100%";
-  var height = "80%";
-  var radius = 100;
+  var width = "60%";
+  var height = "90%";
+  var radius = 125;
   var color = d3.scale.category20c();
 
   for(var i = 0; i < data.length; i++) {
@@ -221,14 +244,11 @@ var renderForm = function(data) {
       .attr("text-anchor", "middle")
       .text(function(d, i) { 
         if(d.value !== 0) { // don't show label if value is 0 
-          return formArr[i].label;  
+          return formArr[i].label + ": "  + formArr[i].value;  
         }
       });    
 
 }
-
-
-
 
 // get fixtures 
 var getFixtures = function(teamName, today){
@@ -263,11 +283,7 @@ var getFixtures = function(teamName, today){
 
 // render fixtures 
 
-
-
-
-
-// on ready functions 
+  // on ready functions 
 $(function() {
   $('#setup button').on('mouseenter', function(e) {
     e.preventDefault();
