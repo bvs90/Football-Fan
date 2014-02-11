@@ -126,18 +126,26 @@ body {
   padding: 0.5%;
 }
 header {
-  height: 4vh;
+  height: 8vh;
   width: 100%;
   margin: 1vh 0;
   border: 1px solid black;
   box-sizing: border-box;
-  /* needs clearfix at some point */
+}
+header h1 {
+  font-family: 'Fjalla One', sans-serif;
+  font-size: 2.4em;
+}
+header h3 {
+  font-family: 'PT Sans Narrow', sans-serif;
+  font-size: 2.4em;
 }
 nav {
   position: relative;
 }
 header h1 {
   float: left;
+  margin-bottom: 7px;
 }
 header h2 {
   float: right;
@@ -149,17 +157,20 @@ header h3 {
 /*#team-menu-flyout {
   width: 33%;
 }*/
-
+.stats-container h2 {
+  font-family: 'Fjalla One', sans-serif;
+  font-size: 1.8em;  
+}
 
 .bigBox {
-  height: 91.5vh;
+  height: 87.5vh;
   width: 33%;
   border: 1px solid black;
   box-sizing: border-box;
   float: left;
 }
 .smallBox {
-  height: 45.30vh;
+  height: 43.30vh;
   width: 33%;
   border: 1px solid black;
   box-sizing: border-box;
@@ -178,15 +189,55 @@ header h3 {
 }
 
 /* Form */
+#form svg {
+  display: block;
+  margin: 0 auto;
+}
+svg text {
+  font-size: 1.4em;
+}
 
-
+/* Top Scorers */ 
+.data-container {
+  float: left;
+  width: 100%;
+  margin-bottom: 10px;
+}
+.data-rep {
+  height: 20px;
+  background-color: red;
+  float: left;
+}
+#top-scorers span {
+  display: block;
+  float: left;
+  vertical-align: center;
+  width: 20%;
+  margin-right: 20px;
+  height: 20px;
+}
+.goals {
+  display: block;
+  float: right;
+  margin: 0;
+  padding-right: 6px;
+}
 
 /* League Table */
+#league-table table {
+  width: 90%;
+  margin: 0 auto;
+}
+
 #league-table th {
-  padding: 3px;
+  font-family: 'PT Sans Narrow', sans-serif;
+  font-size: 1.4em;
+  padding: 3px 6px;
 }
 #league-table td {
+  font-family: 'PT Sans Narrow', sans-serif;
   padding: 7px 0;
+  font-size: 1.4em;
 }
 .team-name {
   text-align: left;
