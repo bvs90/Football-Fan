@@ -120,6 +120,7 @@ var getResults = function(teamName, today){
 // get form 
 var getForm = function(teamName){
   if(('#form').length > 1) {
+    $('#form').find('svg').remove();
     $('#form').find('ul').remove();
   };
 
@@ -130,6 +131,7 @@ var getForm = function(teamName){
       $list = $('<ul></ul>');
       for(var i = 0; i < data.length; i++){
         if(teamName === data[i]['teampath']) {
+          renderForm(data[i].form);
           $form = $('<li>' + data[i].form + '</li>');
           $list.append([$form]);
           $('#form').append($list)
@@ -142,7 +144,65 @@ var getForm = function(teamName){
   })
 };
 
-// render form 
+// render form  
+var renderForm = function(data) {
+  formArr = [
+    { 'label': 'Won', 'value': 0},
+    { 'label': 'Lost', 'value': 0},
+    { 'label': 'Drawn', 'value': 0}
+  ];
+  
+  var width = "100%";
+  var height = "80%";
+  var radius = 100;
+  var color = d3.scale.category20c();
+
+  for(var i = 0; i < data.length; i++) {
+    if(data[i] === 'W') {
+      formArr[0]['value']++;
+    }else if(data[i] === 'D') {
+      formArr[2]['value']++;
+    }else {
+      formArr[1]['value']++;
+    }
+  }
+
+  var canvas = d3.select('#form')
+    .append('svg:svg')
+    .data([formArr])
+      .attr("width", width)
+      .attr("height", height)
+    .append("svg:g")
+      .attr("transform", "translate(" + radius + " , " + radius + ")");  
+
+  var arc = d3.svg.arc()
+    .outerRadius(radius);
+
+  var pie = d3.layout.pie()
+    .value(function(d) { return d.value; });
+
+  var arcs = canvas.selectAll('g.slice')
+    .data(pie)
+    .enter()
+      .append('svg:g')
+        .attr("class", "slice");
+
+    arcs.append("svg:path")
+      .attr("fill", function(d, i) { return color(i); })
+      .attr("d", arc);    
+
+    arcs.append("svg:text")
+      .attr("transform", function(d) {
+        d.innerRadius = 0;
+        d.outerRadius = radius;
+        return "translate(" + arc.centroid(d) + ")";
+      })
+      .attr("text-anchor", "middle")
+      .text(function(d, i) { return formArr[i].label; });    
+
+}
+
+
 
 
 // get fixtures 
@@ -195,16 +255,23 @@ $(function() {
     $('#setup').remove();
     $('.stats-container').fadeIn(1);
     initialise(team);
+  });
 
   $('#league-table').on('click', '.team-name', function() {
     initialise($(this).data('team'));
-  })  
-    
+  });      
 
-  // $('#switch-team').on('mouseenter', function() {
+  $('#switch-team').on('mouseenter', function() {
+    $('#team-menu-flyout').fadeIn(400);
+  });
 
-  // })  
+  $('.close-flyout').on('click', function() {
+    $('#team-menu-flyout').fadeOut(400);
+  });
 
-  })  
+  $('.team-list-flyout').find('a').on('click', function() {
+    initialise($(this).data('team'));
+  }) 
+
 })
 
