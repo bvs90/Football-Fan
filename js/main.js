@@ -34,7 +34,7 @@ var initialise = function(teamName){
   getForm(teamName);
   getFixtures(teamName, today);
   getResults(teamName, today);
-  getTable();
+  getTable(teamName);
 }
 
 // get top scorers 
@@ -48,7 +48,7 @@ var getTopScorers = function(teamName){
     dataType: "jsonp",
     success: function(data){
       var scoreObj = [];
-      for(var i = 0; i < 10; i++){
+      for(var i = 0; i < 9; i++){
         if(data[i]){
           scoreObj.push(data[i]);
         }
@@ -61,7 +61,7 @@ var getTopScorers = function(teamName){
   })
 };
 
-// render top scores 
+// render top scorers 
 var renderScorers = function(data) {
   var goalsData = data;
   var maxGoals = goalsData[0]['goals'];
@@ -72,20 +72,18 @@ var renderScorers = function(data) {
 
   var chart = d3.select('#top-scorers').selectAll('div')
     .data(goalsData)
-    .enter().append('div').classed('data-container', true)
+    .enter().append('div').classed('data-container', true).classed('group', true)
 
   chart.append('span')
-    .text(function(d) { return d.playershort; });
+    .text(function(d) { return d.player + ": " + d.goals; });
   chart.append('div')
-    .style('width', function(d) { return (75 / maxGoals) * d.goals + '%'})
+    .style('width', function(d) { return (96 / maxGoals) * d.goals + '%'})
     .style('background-color', function(d, i) { return colors(i); })
     .classed('data-rep', true)
-    .append('span').classed('goals', true)
-    .text(function(d) { return d.goals; });
 }
 
-// get league table
-var getTable = function(teamName, today){
+// get & render league table
+var getTable = function(teamName){
   if(('#league-table').length > 1) {
     $('#league-table').find('table').remove();
   };
@@ -100,7 +98,11 @@ var getTable = function(teamName, today){
       $('#league-table').append($table);
       
       for(var i = 0; i < data.length; i++){
-        var $row = $('<tr></tr>');
+        if (teamName === data[i].teampath){
+          var $row = $('<tr class="selected-team"></tr>');  
+        }else{
+          var $row = $('<tr></tr>');
+        }
         var $team = $('<td class="team-name" data-team="' + data[i].teampath + '">' + data[i].team +'</td>');
         var $played = $('<td>' + data[i].played +'</td>');
         var $won = $('<td>' + data[i].won +'</td>');
@@ -120,10 +122,6 @@ var getTable = function(teamName, today){
     } 
   })
 };  
-
-
-// render league table 
-
 
 // get results
 var getResults = function(teamName, today){
@@ -155,7 +153,69 @@ var getResults = function(teamName, today){
   })
 }; 
 
-// render results 
+// render results
+var renderResults = function() {
+  formArr = [
+    { 'label': 'Won', 'value': 0},
+    { 'label': 'Lost', 'value': 0},
+    { 'label': 'Drawn', 'value': 0}
+  ];
+  
+  var width = "60%";
+  var height = "90%";
+  var radius = 125;
+  var color = d3.scale.category20c();
+
+  for(var i = 0; i < data.length; i++) {
+    if(data[i] === 'W') {
+      formArr[0]['value']++;
+    }else if(data[i] === 'D') {
+      formArr[2]['value']++;
+    }else {
+      formArr[1]['value']++;
+    }
+  }
+
+  var canvas = d3.select('#form')
+    .append('svg:svg')
+    .data([formArr])
+      .attr("width", width)
+      .attr("height", height)
+    .append("svg:g")
+      .attr("transform", "translate(" + radius + " , " + radius + ")");  
+
+  var arc = d3.svg.arc()
+    .outerRadius(radius);
+
+  var pie = d3.layout.pie()
+    .value(function(d) { return d.value; });
+
+  var arcs = canvas.selectAll('g.slice')
+    .data(pie)
+    .enter()
+      .append('svg:g')
+        .attr("class", "slice");
+
+    arcs.append("svg:path")
+      .attr("fill", function(d, i) { return color(i); })
+      .attr("d", arc);    
+
+    arcs.append("svg:text")
+      .attr("transform", function(d) {
+        d.innerRadius = 0;
+        d.outerRadius = radius;
+        return "translate(" + arc.centroid(d) + ")";
+      })
+      .attr("text-anchor", "middle")
+      .text(function(d, i) { 
+        if(d.value !== 0) { // don't show label if value is 0 
+          return formArr[i].label + ": "  + formArr[i].value;  
+        }
+      });  
+};
+
+
+
 
 
 // get form 
@@ -169,13 +229,9 @@ var getForm = function(teamName){
     url: "http://api.statsfc.com/form.json?key=SBCwkOLa9b8lmePuTjFIoFmFkdo9cvtAPrhxlA6k&competition=premier-league&year=2013/2014",    
     dataType: "jsonp",
     success: function(data){
-      $list = $('<ul></ul>');
       for(var i = 0; i < data.length; i++){
         if(teamName === data[i]['teampath']) {
           renderForm(data[i].form);
-          $form = $('<li>' + data[i].form + '</li>');
-          $list.append([$form]);
-          $('#form').append($list)
         }
       } 
     },
@@ -292,6 +348,7 @@ $(function() {
     $('#setup').remove();
     $('.stats-container').fadeIn(1);
     initialise(team);
+
   });
 
   $('#league-table').on('click', '.team-name', function() {
@@ -299,16 +356,18 @@ $(function() {
   });      
 
   $('#switch-team').on('mouseenter', function() {
+    $('body').css('opacity', '0.25');
+    $('body').filter('#team-menu-flyout').css('opacity', '1');
     $('#team-menu-flyout').fadeIn(400);
   });
 
   $('.close-flyout').on('click', function() {
+    $('body').css('opacity', '1');
     $('#team-menu-flyout').fadeOut(400);
   });
 
   $('.team-list-flyout').find('a').on('click', function() {
     initialise($(this).data('team'));
-  }) 
-
+  })   
 })
 
