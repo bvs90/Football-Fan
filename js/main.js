@@ -5,9 +5,30 @@ var initialise = function(teamName){
   today = today.toISOString('YYYY-MM-DD');
   today = today.slice(0,10);
 
-  // var teamHash = {
+  var teamHash = {
+    "arsenal": 'Arsenal',
+    "aston-villa": 'Aston Villa',
+    "cardiff-city": 'Cardiff City',
+    "chelsea": 'Chelsea',
+    "crystal-palace": 'Crystal Palace',
+    "everton": 'Everton', 
+    "fulham": 'Fulham',
+    "hull-city": 'Hull City',
+    "liverpool": 'Liverpool', 
+    "manchester-city": 'Manchester City', 
+    "manchester-united": 'Manchester United', 
+    "newcastle-united": 'Newcastle United',
+    "norwich-city": 'Norwich City', 
+    "southampton": 'Southampton', 
+    "stoke-city": 'Stoke City', 
+    "sunderland": 'Sunderland', 
+    "swansea-city": 'Swansea City', 
+    "tottenham-hotspur": 'Tottenham Hotspur', 
+    "west-bromwich-albion": 'West Bromwich Albion', 
+    "west-ham-united": 'West Ham United'
+  }
 
-  // }
+  $('.full-team-name').text(teamHash[teamName]);
 
   getTopScorers(teamName);
   getForm(teamName);
@@ -198,7 +219,11 @@ var renderForm = function(data) {
         return "translate(" + arc.centroid(d) + ")";
       })
       .attr("text-anchor", "middle")
-      .text(function(d, i) { return formArr[i].label; });    
+      .text(function(d, i) { 
+        if(d.value !== 0) { // don't show label if value is 0 
+          return formArr[i].label;  
+        }
+      });    
 
 }
 
@@ -246,7 +271,7 @@ var getFixtures = function(teamName, today){
 $(function() {
   $('#setup button').on('mouseenter', function(e) {
     e.preventDefault();
-    $('#team-menu').fadeIn(1);
+    $('#team-menu').fadeIn(400);
   });
 
   $('#team-menu a').on('click', function(e) {
