@@ -4,33 +4,24 @@ var initialise = function(teamName){
   var today = new Date();
   today = today.toISOString('YYYY-MM-DD');
   today = today.slice(0,10);
-  
+
+  // var teamHash = {
+
+  // }
+
   getTopScorers(teamName);
-  //checkJSON()
   getForm(teamName);
   getFixtures(teamName, today);
   getResults(teamName, today);
   getTable();
 }
 
-//utility to chekc team names are correct. 
-// var checkJSON = function() {
-//   $.ajax({
-//     url: "http://api.statsfc.com/teams.json?key=SBCwkOLa9b8lmePuTjFIoFmFkdo9cvtAPrhxlA6k&competition&competition=premier-league&year=2013/2014", // teams
-//     url: "http://api.statsfc.com/form.json?key=SBCwkOLa9b8lmePuTjFIoFmFkdo9cvtAPrhxlA6k&competition=premier-league&year=2013/2014", // form  
-//     dataType: "jsonp",
-//     success: function(data){
-//       console.log(data);  
-//     },
-//     error: function(err){
-//       throw err;
-//     } 
-//   })  
-// }
-
-
 // get top scorers 
 var getTopScorers = function(teamName){
+  if(('#top-scorers').length > 1) {
+    $('#top-scorers').find('ul').remove();
+  };
+
   $.ajax({
     url: "http://api.statsfc.com/top-scorers.json?key=SBCwkOLa9b8lmePuTjFIoFmFkdo9cvtAPrhxlA6k&competition=premier-league&team=" + teamName + "&year=2013/2014",    
     dataType: "jsonp",
@@ -54,6 +45,10 @@ var getTopScorers = function(teamName){
 
 // get league table
 var getTable = function(teamName, today){
+  if(('#league-table').length > 1) {
+    $('#league-table').find('table').remove();
+  };
+
   $.ajax({
     url: "http://api.statsfc.com/table.json?key=SBCwkOLa9b8lmePuTjFIoFmFkdo9cvtAPrhxlA6k&competition=premier-league&year=2013/2014",    
     dataType: "jsonp",
@@ -65,7 +60,7 @@ var getTable = function(teamName, today){
       
       for(var i = 0; i < data.length; i++){
         var $row = $('<tr></tr>');
-        var $team = $('<td class="team-name">' + data[i].team +'</td>');
+        var $team = $('<td class="team-name" data-team="' + data[i].teampath + '">' + data[i].team +'</td>');
         var $played = $('<td>' + data[i].played +'</td>');
         var $won = $('<td>' + data[i].won +'</td>');
         var $drawn = $('<td>' + data[i].drawn +'</td>');
@@ -91,6 +86,10 @@ var getTable = function(teamName, today){
 
 // get results
 var getResults = function(teamName, today){
+  if(('#results').length > 1) {
+    $('#results').find('ul').remove();
+  };
+
   $.ajax({
     url: "http://api.statsfc.com/results.json?key=SBCwkOLa9b8lmePuTjFIoFmFkdo9cvtAPrhxlA6k&competition=premier-league&team=" + teamName + "&year=2013/2014&from=2013-08-01&to=" + today + "&timezone=America/Los_Angeles&limit=10",    
     dataType: "jsonp",
@@ -120,6 +119,10 @@ var getResults = function(teamName, today){
 
 // get form 
 var getForm = function(teamName){
+  if(('#form').length > 1) {
+    $('#form').find('ul').remove();
+  };
+
   $.ajax({
     url: "http://api.statsfc.com/form.json?key=SBCwkOLa9b8lmePuTjFIoFmFkdo9cvtAPrhxlA6k&competition=premier-league&year=2013/2014",    
     dataType: "jsonp",
@@ -144,6 +147,10 @@ var getForm = function(teamName){
 
 // get fixtures 
 var getFixtures = function(teamName, today){
+  if(('#fixtures').length > 1) {
+    $('#fixtures').find('ul').remove();
+  };
+
   $.ajax({
     url: "http://api.statsfc.com/fixtures.json?key=SBCwkOLa9b8lmePuTjFIoFmFkdo9cvtAPrhxlA6k&competition=premier-league&team=" + teamName + "&from=" + today + "&to=2014-06-01&timezone=America/Los_Angeles&limit=10",    
     dataType: "jsonp",
@@ -188,6 +195,11 @@ $(function() {
     $('#setup').remove();
     $('.stats-container').fadeIn(1);
     initialise(team);
+
+  $('#league-table').on('click', '.team-name', function() {
+    initialise($(this).data('team'));
+  })  
+    
 
   // $('#switch-team').on('mouseenter', function() {
 
