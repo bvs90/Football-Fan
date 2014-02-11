@@ -56,20 +56,60 @@ table {
   clear: both;
 }
 
+/* Web Fonts */
+@import url(http://fonts.googleapis.com/css?family=PT+Sans+Narrow|Fjalla+One);
+/* font-family: 'Fjalla One', sans-serif; */
+/* font-family: 'PT Sans Narrow', sans-serif; */
 
 /* Main Styles */
+body {
+  font-size: 62.5%;
+  color: #333;
+}
+a {
+  text-decoration: none;
+  color: #333;
+}
 #setup {
   width: 33%;
   margin: 15% auto;
   text-align: center;
 }
+#setup h1 {
+  font-size: 3.6em; 
+  font-family: 'Fjalla One', sans-serif;
+  margin-bottom: 10px;
+}
+#setup button {
+  background-color: #FF5A46;
+  padding: 10px;
+  color: #fff;
+  font-family: 'PT Sans Narrow', sans-serif;
+  font-size: 1.4em; 
+  border: none;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
 #team-menu {
   display: none;
+  font-family: 'PT Sans Narrow', sans-serif;
+  font-size: 1.8em;
+  background-color: #FF5A46;
+  border-radius: 12px;
+  padding: 6px;
+}
+#team-menu li {
+  margin: 9px;
+}
+#team-menu li a{
+  color: #fff;
+}
+#team-menu li a:hover{
+  color: #333;
 }
 .team-menu-left,
 .team-menu-right {
   width: 48%;
-  border: 1px solid red;
 }
 .team-menu-left {
   float: left;
@@ -93,9 +133,18 @@ header {
   box-sizing: border-box;
   /* needs clearfix at some point */
 }
-
+nav {
+  position: relative;
+}
+header h1 {
+  float: left;
+}
 header h2 {
   float: right;
+  cursor: pointer;
+}
+header h3 {
+  clear: both;
 }
 /*#team-menu-flyout {
   width: 33%;
@@ -119,6 +168,19 @@ header h2 {
   margin-bottom: 1vh     
 }
 
+/* Switch Team Menu */
+#team-menu-flyout {
+  position: absolute;
+  top: 50px;
+  right: 50px;
+  display: none;
+
+}
+
+/* Form */
+
+
+
 /* League Table */
 #league-table th {
   padding: 3px;
@@ -128,6 +190,7 @@ header h2 {
 }
 .team-name {
   text-align: left;
+  cursor: pointer;
 }
 td {
   text-align: center;
