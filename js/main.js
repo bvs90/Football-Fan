@@ -126,26 +126,14 @@ var getTable = function(teamName){
 // get results
 var getResults = function(teamName, today){
   if(('#results').length > 1) {
-    $('#results').find('ul').remove();
+    $('#results').find('svg').remove();
   };
 
   $.ajax({
     url: "http://api.statsfc.com/results.json?key=SBCwkOLa9b8lmePuTjFIoFmFkdo9cvtAPrhxlA6k&competition=premier-league&team=" + teamName + "&year=2013/2014&from=2013-08-01&to=" + today + "&timezone=America/Los_Angeles&limit=10",    
     dataType: "jsonp",
     success: function(data){
-      var $list = $('<ul></ul>');
-      for(var i = 0; i < data.length; i++){
-        if(data[i].homepath === teamName) {
-          var opponent = data[i].away;
-          var venue = 'Home';
-        }else {
-          var opponent = data[i].home;
-          var venue = 'Away';
-        }
-        var $results = $('<li>' + data[i].date + " " + data[i].fulltime + " V " + opponent + " " + venue + '</li>');
-        $list.append([$results]);
-        $('#results').append($list)
-      } 
+      renderResults(teamName, data);
     },
     error: function(err){
       throw err;
@@ -154,35 +142,39 @@ var getResults = function(teamName, today){
 }; 
 
 // render results
-var renderResults = function() {
-  formArr = [
-    { 'label': 'Won', 'value': 0},
-    { 'label': 'Lost', 'value': 0},
-    { 'label': 'Drawn', 'value': 0}
-  ];
+var renderResults = function(teamName, data) {
+  resultsArr = [];
   
-  var width = "60%";
-  var height = "90%";
-  var radius = 125;
-  var color = d3.scale.category20c();
+  var colors = d3.scale.linear()
+    .domain([-4, 0, 4]) 
+    .range(['#0F2940', '#1D527F', '#2C7CBF', '#3594E5', '#3BA5FF']);
 
   for(var i = 0; i < data.length; i++) {
-    if(data[i] === 'W') {
-      formArr[0]['value']++;
-    }else if(data[i] === 'D') {
-      formArr[2]['value']++;
+    if(data[i].homepath === teamName) {
+      var opponent = data[i].away;
+      var venue = 'Home';
+      var result = data[i].fulltime.join('-');     
     }else {
-      formArr[1]['value']++;
+      var opponent = data[i].home;
+      var venue = 'Away';
+      var result = data[i].fulltime.reverse().join('-');
     }
+    resultsArr.push({'result': result, 'opponent': opponent, 'value': 1}); 
   }
 
-  var canvas = d3.select('#form')
+  console.log(resultsArr);
+  
+  var width = "100%";
+  var height = "100%";
+  var radius = 90;
+
+  var canvas = d3.select('#results')
     .append('svg:svg')
-    .data([formArr])
+    .data([resultsArr])
       .attr("width", width)
       .attr("height", height)
     .append("svg:g")
-      .attr("transform", "translate(" + radius + " , " + radius + ")");  
+      .attr("transform", "translate(" + 234 + " , " + 150 + ")");  
 
   var arc = d3.svg.arc()
     .outerRadius(radius);
@@ -197,7 +189,7 @@ var renderResults = function() {
         .attr("class", "slice");
 
     arcs.append("svg:path")
-      .attr("fill", function(d, i) { return color(i); })
+      .attr("fill", function(d, i) { return colors(i); })
       .attr("d", arc);    
 
     arcs.append("svg:text")
@@ -208,10 +200,20 @@ var renderResults = function() {
       })
       .attr("text-anchor", "middle")
       .text(function(d, i) { 
-        if(d.value !== 0) { // don't show label if value is 0 
-          return formArr[i].label + ": "  + formArr[i].value;  
-        }
-      });  
+          return resultsArr[i].result;
+      });
+
+  var pos = d3.svg.arc().innerRadius(radius + 40).outerRadius(radius + 40); 
+
+  arcs.append("svg:text") 
+         .attr("transform", function(d) { return "translate(" + 
+      pos.centroid(d) + ")"; }) 
+         .attr("dy", 5) 
+         .attr("text-anchor", "middle") 
+         //.attr("display", function(d) { return d.value >= 2 ? null : "none"; })  
+         .text(function(d, i) { return resultsArr[i].opponent;});  
+
+
 };
 
 
@@ -224,7 +226,6 @@ var getForm = function(teamName){
     $('#form').find('svg').remove();
     $('#form').find('ul').remove();
   };
-
   $.ajax({
     url: "http://api.statsfc.com/form.json?key=SBCwkOLa9b8lmePuTjFIoFmFkdo9cvtAPrhxlA6k&competition=premier-league&year=2013/2014",    
     dataType: "jsonp",
@@ -249,8 +250,8 @@ var renderForm = function(data) {
     { 'label': 'Drawn', 'value': 0}
   ];
   
-  var width = "60%";
-  var height = "90%";
+  var width = "100%";
+  var height = "100%";
   var radius = 125;
   var color = d3.scale.category20c();
 
@@ -270,7 +271,7 @@ var renderForm = function(data) {
       .attr("width", width)
       .attr("height", height)
     .append("svg:g")
-      .attr("transform", "translate(" + radius + " , " + radius + ")");  
+      .attr("transform", "translate(" + 234 + " , " + radius + ")");  
 
   var arc = d3.svg.arc()
     .outerRadius(radius);
