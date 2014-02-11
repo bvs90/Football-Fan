@@ -124,12 +124,12 @@ a {
 /* Stats Page */
 body {
   padding: 0.5%;
+  background-color: #f4f4f4;
 }
 header {
   height: 8vh;
   width: 100%;
   margin: 1vh 0;
-  border: 1px solid black;
   box-sizing: border-box;
 }
 header h1 {
@@ -157,26 +157,33 @@ header h3 {
 /*#team-menu-flyout {
   width: 33%;
 }*/
+.stats-container {
+  font-family: 'PT Sans Narrow', sans-serif;
+}
 .stats-container h2 {
   font-family: 'Fjalla One', sans-serif;
-  font-size: 1.8em;  
+  font-size: 1.8em;
+  text-align: center;
+  margin: 7px 0;  
 }
 
 .bigBox {
   height: 87.5vh;
   width: 33%;
-  border: 1px solid black;
   box-sizing: border-box;
   float: left;
+  background-color: #fff;
+  border-radius: 10px;
 }
 .smallBox {
   height: 43.30vh;
   width: 33%;
-  border: 1px solid black;
   box-sizing: border-box;
   float: left;
   margin-left: 0.5%;
-  margin-bottom: 1vh     
+  margin-bottom: 1vh;
+  background-color: #fff;
+  border-radius: 10px;     
 }
 
 /* Switch Team Menu */
@@ -195,53 +202,64 @@ header h3 {
 }
 svg text {
   font-size: 1.4em;
+  fill: #fff;
 }
 
 /* Top Scorers */ 
 .data-container {
   float: left;
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 3px;
+  padding-left: 2%;
 }
 .data-rep {
-  height: 20px;
-  background-color: red;
+  height: 15px;
   float: left;
 }
 #top-scorers span {
   display: block;
-  float: left;
-  vertical-align: center;
-  width: 20%;
-  margin-right: 20px;
-  height: 20px;
+  margin-right: 25px;
+  width: 100%;
+  font-size: 1.4em;
 }
-.goals {
-  display: block;
-  float: right;
-  margin: 0;
-  padding-right: 6px;
+
+/* Results */
+#results ul, 
+#fixtures ul {
+  font-size: 1.4em;
+  padding-left: 2%;
 }
+#results li, 
+#fixtures li {
+  margin-bottom: 2%;
+}
+
+
+/* Fixtures */
 
 /* League Table */
 #league-table table {
   width: 90%;
-  margin: 0 auto;
+  margin: 5% auto;
 }
 
 #league-table th {
-  font-family: 'PT Sans Narrow', sans-serif;
   font-size: 1.4em;
   padding: 3px 6px;
 }
 #league-table td {
-  font-family: 'PT Sans Narrow', sans-serif;
-  padding: 7px 0;
+  padding: 8px 0;
   font-size: 1.4em;
 }
 .team-name {
   text-align: left;
   cursor: pointer;
+}
+.team-name:hover {
+  color: #1D527F;
+}
+.selected-team {
+  color: #3BA5FF;
 }
 td {
   text-align: center;
