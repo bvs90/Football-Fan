@@ -64,14 +64,11 @@ var getTopScorers = function(teamName){
 // render top scores 
 var renderScorers = function(data) {
   var goalsData = data;
-  console.log(goalsData);
+  var maxGoals = goalsData[0]['goals'];
 
-  var x = d3.scale.linear()
-    .domain([0, d3.max(data)])
-    .range([0, ])
-
-  var width = '50%';
-  var barHeight = '5%';
+  var colors = d3.scale.linear()
+    .domain([-4, 0, 4]) 
+    .range(['#0F2940', '#1D527F', '#2C7CBF', '#3594E5', '#3BA5FF']);
 
   var chart = d3.select('#top-scorers').selectAll('div')
     .data(goalsData)
@@ -80,11 +77,11 @@ var renderScorers = function(data) {
   chart.append('span')
     .text(function(d) { return d.playershort; });
   chart.append('div')
-    .style('width', function(d) { return d.goals * 10 + 'px'})
+    .style('width', function(d) { return (75 / maxGoals) * d.goals + '%'})
+    .style('background-color', function(d, i) { return colors(i); })
     .classed('data-rep', true)
     .append('span').classed('goals', true)
     .text(function(d) { return d.goals; });
-
 }
 
 // get league table
@@ -247,7 +244,6 @@ var renderForm = function(data) {
           return formArr[i].label + ": "  + formArr[i].value;  
         }
       });    
-
 }
 
 // get fixtures 
@@ -283,7 +279,7 @@ var getFixtures = function(teamName, today){
 
 // render fixtures 
 
-  // on ready functions 
+// on ready functions 
 $(function() {
   $('#setup button').on('mouseenter', function(e) {
     e.preventDefault();
