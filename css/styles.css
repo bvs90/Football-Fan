@@ -81,7 +81,7 @@ a {
   margin-bottom: 10px;
 }
 #setup button {
-  background-color: #FF5A46;
+  background-color: #1D527F;
   padding: 10px;
   color: #fff;
   font-family: 'PT Sans Narrow', sans-serif;
@@ -94,7 +94,7 @@ a {
   display: none;
   font-family: 'PT Sans Narrow', sans-serif;
   font-size: 1.8em;
-  background-color: #FF5A46;
+  background-color: #1D527F;
   border-radius: 12px;
   padding: 6px;
 }
@@ -105,7 +105,7 @@ a {
   color: #fff;
 }
 #team-menu li a:hover{
-  color: #333;
+  color: #FFF582;
 }
 .team-menu-left,
 .team-menu-right {
@@ -131,32 +131,24 @@ header {
   width: 100%;
   margin: 1vh 0;
   box-sizing: border-box;
+  border-radius: 10px;
+  background: #fff;
 }
 header h1 {
   font-family: 'Fjalla One', sans-serif;
   font-size: 2.4em;
+  padding-top: 7px;
+  padding-left: 2%;
+  margin-bottom: 7px;
 }
 header h3 {
   font-family: 'PT Sans Narrow', sans-serif;
   font-size: 2.4em;
+  padding-left: 2%;
 }
 nav {
   position: relative;
 }
-header h1 {
-  float: left;
-  margin-bottom: 7px;
-}
-header h2 {
-  float: right;
-  cursor: pointer;
-}
-header h3 {
-  clear: both;
-}
-/*#team-menu-flyout {
-  width: 33%;
-}*/
 .stats-container {
   font-family: 'PT Sans Narrow', sans-serif;
 }
@@ -194,11 +186,16 @@ header h3 {
   display: none;
 
 }
+/* Results */
+#results .slice text:last-child {
+  font-size: 1.2em;
+  fill: #333;
+}
 
 /* Form */
 #form svg {
   display: block;
-  margin: 0 auto;
+  margin: 5% auto;
 }
 svg text {
   font-size: 1.4em;
@@ -229,13 +226,11 @@ svg text {
   font-size: 1.4em;
   padding-left: 2%;
 }
-#results li, 
-#fixtures li {
-  margin-bottom: 2%;
-}
-
-
+ 
 /* Fixtures */
+#fixtures li {
+  margin-bottom: 3%;
+}
 
 /* League Table */
 #league-table table {
@@ -246,6 +241,7 @@ svg text {
 #league-table th {
   font-size: 1.4em;
   padding: 3px 6px;
+  text-decoration: underline;
 }
 #league-table td {
   padding: 8px 0;
